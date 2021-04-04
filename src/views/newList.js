@@ -14,6 +14,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Toast from 'react-native-simple-toast';
 
 import ListService from '../utils/db/lists';
+import ListModel from '../utils/db/models/list.model';
 
 const NewList: () => Node = props => {
   const {colors, fontSizes} = theme;
@@ -109,7 +110,13 @@ const NewList: () => Node = props => {
           const randomColor = getRandomColor();
 
           if (params.type === 'new') {
-            ListService.save();
+            let save = ListService.save(
+              new ListModel(title, false, randomColor, JSON.stringify(items)),
+            );
+            if (save) {
+              Toast.show('İşlem Başarılı');
+              navigation.goBack();
+            }
           } else {
             console.log('Edit');
           }

@@ -6,7 +6,7 @@ import Box from './box';
 
 import {Check, Square, Edit} from './icons';
 
-const ListItem = ({text, status, id}) => {
+const ListItem = ({text, status, id, statusChange}) => {
   const {colors} = theme;
   return (
     <Box p={2} flexDirection="row" justifyContent="flex-end">
@@ -17,11 +17,7 @@ const ListItem = ({text, status, id}) => {
         p={3}
         flexDirection="row"
         justifyContent="space-around">
-        <Button
-          size={24}
-          borderRadius={5}
-          mr={3}
-          onPress={() => console.log('Status change ' + id)}>
+        <Button size={24} borderRadius={5} mr={3} onPress={statusChange}>
           {status ? (
             <Check color={colors.darkPink} />
           ) : (

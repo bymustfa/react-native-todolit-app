@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, ScrollView, useColorScheme} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
+
 import Box from '../components/box';
 import Text from '../components/text';
 
@@ -15,6 +17,8 @@ import ListService from '../utils/db/lists';
 const HomeView: () => Node = props => {
   const [lists, setLists] = useState([]);
 
+  const isFocused = useIsFocused();
+
   const {colors, fontSizes} = theme;
   const {navigation} = props;
   const colorScheme = useColorScheme();
@@ -23,11 +27,10 @@ const HomeView: () => Node = props => {
     let dataList = ListService.findAll();
     setLists(Array.from(dataList));
   };
+
   useEffect(() => {
     getLists();
-  }, []);
-
-  console.log(lists);
+  }, [isFocused]);
 
   return (
     <Box as={SafeAreaView} flex={1} bg={colors.black} p={2}>
@@ -53,22 +56,26 @@ const HomeView: () => Node = props => {
           {lists.length > 0 ? (
             lists
               .sort((a, b) => b.id - a.id)
-              .map(data => (
-                <Card
-                  key={data.id}
-                  title={data.text}
-                  complete={2}
-                  total={5}
-                  colorName={data.colorName}
-                  id={data.id}
-                  navigation={navigation}
-                  deleteFn={() => {
-                    let del = ListService.delete(data.id);
-                    console.log(del);
-                    getLists();
-                  }}
-                />
-              ))
+              .map(data => {
+                let items = JSON.parse(data.items);
+                let complete = items.filter(x => x.status === true);
+                return (
+                  <Card
+                    key={data.id}
+                    title={data.text}
+                    complete={complete.length}
+                    total={items.length}
+                    colorName={data.colorName}
+                    id={data.id}
+                    navigation={navigation}
+                    deleteFn={() => {
+                      let del = ListService.delete(data.id);
+                      console.log(del);
+                      getLists();
+                    }}
+                  />
+                );
+              })
           ) : (
             <Box
               flexDirection="row"

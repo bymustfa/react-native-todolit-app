@@ -43,7 +43,7 @@ const Card = ({
         <Text color={colors.white}>
           {complete}/{total}{' '}
           <Text fontSize={fontSizes.h6} color={colors.lightGray}>
-            Tamamlanan
+            Tamamlandı
           </Text>
         </Text>
         <Button

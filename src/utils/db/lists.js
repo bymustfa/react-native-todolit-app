@@ -1,7 +1,6 @@
 import Realm from 'realm';
-import ListModel from './models/list.model';
 
-const schemaList = 'ListtableListD3';
+const schemaList = 'LisTableDemo1';
 
 let tableList = new Realm({
   schema: [
@@ -12,6 +11,7 @@ let tableList = new Realm({
         id: {type: 'string', indexed: true},
         text: 'string',
         colorName: 'string',
+        items: 'string',
         status: 'bool',
         createdAt: 'date',
         updatedAt: 'date',
@@ -29,7 +29,12 @@ let ListService = {
       ];
     return tableList.objects(schemaList).sorted(sortBy);
   },
+  find: function (id) {
+    if (!id) return;
+    let datas = this.findAll();
 
+    return datas.filter(x => x.id === id);
+  },
   save: function (data) {
     if (
       tableList.objects(schemaList).filtered("text = '" + data.text + "'")
@@ -37,14 +42,15 @@ let ListService = {
     )
       return;
 
-    tableList.write(() => {
+    let save = tableList.write(() => {
       data.updatedAt = new Date();
       tableList.create(schemaList, data);
     });
+    return true;
   },
 
   update: function (data, callback) {
-    if (!callback) return;
+    // if (!callback) return;
     tableList.write(() => {
       callback();
       data.updatedAt = new Date();
