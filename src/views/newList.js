@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {SafeAreaView, ScrollView, useColorScheme} from 'react-native';
 import Box from '../components/box';
 import Text from '../components/text';
@@ -15,15 +15,29 @@ import Toast from 'react-native-simple-toast';
 
 import ListService from '../utils/db/lists';
 import ListModel from '../utils/db/models/list.model';
+import {useIsFocused} from '@react-navigation/native';
 
 const NewList: () => Node = props => {
-  const {colors, fontSizes} = theme;
+  const {colors} = theme;
   const {navigation, route} = props;
   const {params} = route;
   const colorScheme = useColorScheme();
   const [title, setTitle] = useState('');
 
   const [items, setItems] = useState([]);
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    console.log(params);
+    if (params.type === 'edit') {
+      let dataList = ListService.find(params.id);
+      console.log(params.title);
+      setTitle(params.title);
+      let it = JSON.parse(Array.from(dataList)[0].items);
+      setItems(it.sort((a, b) => a.status - b.status));
+    }
+  }, [isFocused]);
 
   const handleAddListItem = () => {
     const newItem = [
@@ -119,6 +133,10 @@ const NewList: () => Node = props => {
             }
           } else {
             console.log('Edit');
+            let datas = {title: title, status: false};
+            let update = ListService.update(listItem, () => {
+              listItem.items = JSON.stringify(items);
+            });
           }
         } else {
           Toast.show('Liste Elemnalarını Boş Bırakmayınız');

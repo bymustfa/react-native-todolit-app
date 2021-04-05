@@ -6,6 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import HomeView from './views/home';
 import DetailView from './views/detail';
 import NewList from './views/newList';
+import SplashView from './views/splash';
 
 import theme from './utils/theme';
 
@@ -20,10 +21,11 @@ const App = () => {
         // hidden={true}
       />
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="Splash"
         screenOptions={{
           headerShown: false,
         }}>
+        <Stack.Screen name="Splash" component={SplashView} />
         <Stack.Screen name="Home" component={HomeView} />
         <Stack.Screen name="Detail" component={DetailView} />
         <Stack.Screen name="NewList" component={NewList} />

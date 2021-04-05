@@ -5,11 +5,27 @@ import Button from './button';
 import Box from './box';
 
 import {Check, Square, Edit} from './icons';
+import Input from './input';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
-const ListItem = ({text, status, id, statusChange}) => {
+const ListItem = ({text, status, id, statusChange, ...props}) => {
   const {colors} = theme;
   return (
-    <Box p={2} flexDirection="row" justifyContent="flex-end">
+    <Box
+      p={2}
+      flexDirection="row"
+      justifyContent="flex-end"
+      position="relative"
+      {...props}>
+      <Box
+        bg={colors.red}
+        width={3}
+        height="50%"
+        position="absolute"
+        right={2}
+        top="40%"
+        zIndex={3}
+      />
       <Box
         width="100%"
         bg={colors.lightBlack}

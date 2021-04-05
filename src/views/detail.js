@@ -16,6 +16,7 @@ import ListService from '../utils/db/lists';
 
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Button from '../components/button';
+import Input from '../components/input';
 
 const DetailView: () => Node = props => {
   const {colors, fontSizes} = theme;
@@ -52,7 +53,6 @@ const DetailView: () => Node = props => {
   const deleteItem = id => {
     const arr = items.filter(x => x.id !== id);
     setItems(arr);
-    console.log(items);
 
     // ListService.update(listItem, () => {
     //   listItem.items = JSON.stringify(items);
@@ -117,18 +117,24 @@ const DetailView: () => Node = props => {
                 }
               />
             }
-            onclick={() => console.log('Add')}
-          />
-          <ActionButton
-            icon={
-              <Save
-                color={
-                  colorScheme === 'dark' ? colors.darkBlackText : colors.white
-                }
-              />
+            onclick={() =>
+              navigation.navigate('NewList', {
+                id: params.id,
+                type: 'edit',
+                title: params.title,
+              })
             }
-            onclick={() => console.log('Save')}
           />
+          {/*<ActionButton*/}
+          {/*  icon={*/}
+          {/*    <Save*/}
+          {/*      color={*/}
+          {/*        colorScheme === 'dark' ? colors.darkBlackText : colors.white*/}
+          {/*      }*/}
+          {/*    />*/}
+          {/*  }*/}
+          {/*  onclick={() => console.log('Save')}*/}
+          {/*/>*/}
         </Box>
       </Box>
 
@@ -150,9 +156,7 @@ const DetailView: () => Node = props => {
             return (
               <Swipeable
                 key={data.id}
-                renderRightActions={() => renderRightActions(data.id)}
-                // renderLeftActions={renderLeftActions}
-              >
+                renderRightActions={() => renderRightActions(data.id)}>
                 <ListItem
                   text={data.text}
                   status={data.status}

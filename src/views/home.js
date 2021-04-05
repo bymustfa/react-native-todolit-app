@@ -69,8 +69,7 @@ const HomeView: () => Node = props => {
                     id={data.id}
                     navigation={navigation}
                     deleteFn={() => {
-                      let del = ListService.delete(data.id);
-                      console.log(del);
+                      ListService.delete(data.id);
                       getLists();
                     }}
                   />
