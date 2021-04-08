@@ -8,7 +8,7 @@ import Text from '../components/text';
 import Heading from '../components/Heading';
 import ListItem from '../components/ListItem';
 import ActionButton from '../components/BackButton';
-import {Left, Plus, Delete, Save} from '../components/icons';
+import {Left, Plus, Delete, Edit} from '../components/icons';
 
 import theme from '../utils/theme';
 
@@ -23,6 +23,7 @@ const DetailView: () => Node = props => {
   const {navigation, route} = props;
   const [items, setItems] = useState([]);
   const [listItem, setListItem] = useState({});
+  const [title, setTitle] = useState('');
 
   const isFocused = useIsFocused();
 
@@ -31,8 +32,10 @@ const DetailView: () => Node = props => {
 
   useEffect(() => {
     let dataList = ListService.find(params.id);
-    setListItem(Array.from(dataList)[0]);
-    let it = JSON.parse(Array.from(dataList)[0].items);
+    dataList = Array.from(dataList)[0];
+    setListItem(dataList);
+    setTitle(dataList.text);
+    let it = JSON.parse(dataList.items);
     setItems(it.sort((a, b) => a.status - b.status));
   }, [isFocused]);
 
@@ -44,9 +47,9 @@ const DetailView: () => Node = props => {
       return item;
     });
     setItems(it.sort((a, b) => a.status - b.status));
-
-    ListService.update(listItem, () => {
-      listItem.items = JSON.stringify(items);
+    let tempItems = listItem;
+    ListService.update(tempItems, () => {
+      tempItems.items = JSON.stringify(items);
     });
   };
 
@@ -103,7 +106,7 @@ const DetailView: () => Node = props => {
             }
             onclick={() => navigation.goBack()}
           />
-          <Heading title={params.title} />
+          <Heading title={title} />
         </Box>
         <Box
           flexDirection="row"
@@ -111,7 +114,7 @@ const DetailView: () => Node = props => {
           alignItems="center">
           <ActionButton
             icon={
-              <Plus
+              <Edit
                 color={
                   colorScheme === 'dark' ? colors.darkBlackText : colors.white
                 }
@@ -125,16 +128,6 @@ const DetailView: () => Node = props => {
               })
             }
           />
-          {/*<ActionButton*/}
-          {/*  icon={*/}
-          {/*    <Save*/}
-          {/*      color={*/}
-          {/*        colorScheme === 'dark' ? colors.darkBlackText : colors.white*/}
-          {/*      }*/}
-          {/*    />*/}
-          {/*  }*/}
-          {/*  onclick={() => console.log('Save')}*/}
-          {/*/>*/}
         </Box>
       </Box>
 

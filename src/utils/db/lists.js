@@ -1,6 +1,6 @@
 import Realm from 'realm';
 
-const schemaList = 'LisTableDemo1';
+const schemaList = 'LisTableProd';
 
 let tableList = new Realm({
   schema: [
@@ -53,6 +53,7 @@ let ListService = {
     // if (!callback) return;
     tableList.write(() => {
       callback();
+
       data.updatedAt = new Date();
     });
   },

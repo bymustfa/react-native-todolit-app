@@ -23,17 +23,17 @@ const NewList: () => Node = props => {
   const {params} = route;
   const colorScheme = useColorScheme();
   const [title, setTitle] = useState('');
-
   const [items, setItems] = useState([]);
+
+  const [editData, setEditData] = useState({});
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log(params);
     if (params.type === 'edit') {
       let dataList = ListService.find(params.id);
-      console.log(params.title);
-      setTitle(params.title);
+      setEditData(dataList[0]);
+      setTitle(dataList[0].text);
       let it = JSON.parse(Array.from(dataList)[0].items);
       setItems(it.sort((a, b) => a.status - b.status));
     }
@@ -72,32 +72,9 @@ const NewList: () => Node = props => {
             value={item.text}
             placeholder="Item"
             mb={2}
+            autoFocus={true}
           />
         </Box>
-      </Button>
-    );
-  };
-
-  const renderLeftActions = (progress, dragX) => {
-    return (
-      <Button size={25} bg={colors.green} onPress={() => console.log('delete')}>
-        <Text>Ok</Text>
-      </Button>
-    );
-  };
-  const renderRightActions = (progress, dragX) => {
-    return (
-      <Button size={25} bg={colors.red} onPress={() => console.log('delete')}>
-        <Text>Delete</Text>
-        {/*<Animated.Text*/}
-        {/*  style={[*/}
-        {/*    styles.actionText,*/}
-        {/*    {*/}
-        {/*      transform: [{translateX: trans}],*/}
-        {/*    },*/}
-        {/*  ]}>*/}
-        {/*  Archive*/}
-        {/*</Animated.Text>*/}
       </Button>
     );
   };
@@ -132,10 +109,9 @@ const NewList: () => Node = props => {
               navigation.goBack();
             }
           } else {
-            console.log('Edit');
-            let datas = {title: title, status: false};
-            let update = ListService.update(listItem, () => {
-              listItem.items = JSON.stringify(items);
+            let update = ListService.update(editData, () => {
+              editData.items = JSON.stringify(items);
+              editData.text = title;
             });
           }
         } else {
@@ -188,20 +164,17 @@ const NewList: () => Node = props => {
           onChangeText={setTitle}
           value={title}
           placeholder="Başlık"
-          label="Demo"
+          label="Başlık"
+          autoFocus={true}
         />
         <Box width="100%" height={2} bg={colors.lightBlack} my={3} />
 
-        <Box as={ScrollView} pb={3}>
-          {items.map(item => (
-            <Swipeable
-              key={item.id}
-              // renderRightActions={renderRightActions}
-              // renderLeftActions={renderLeftActions}
-            >
-              {renderElement(item)}
-            </Swipeable>
-          ))}
+        <Box
+          as={ScrollView}
+          pb={3}
+          keyboardShouldPersistTaps="always"
+          contentInsetAdjustmentBehavior="automatic">
+          {items.map(item => renderElement(item))}
 
           <Button
             width="100%"

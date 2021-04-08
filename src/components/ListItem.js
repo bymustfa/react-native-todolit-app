@@ -41,7 +41,7 @@ const ListItem = ({text, status, id, statusChange, ...props}) => {
           )}
         </Button>
 
-        <Button onPress={() => console.log('Edit ' + id)} width="90%">
+        <Button width="90%">
           <Text
             color={status ? colors.gray : colors.white}
             style={{textDecorationLine: status ? 'line-through' : 'none'}}>

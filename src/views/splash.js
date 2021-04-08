@@ -1,17 +1,40 @@
-import React, {useEffect} from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {
+  SafeAreaView,
+  View,
+  ImageBackground,
+  Image,
+  Animated,
+} from 'react-native';
 import Box from '../components/box';
-import Text from '../components/text';
 
 import theme from '../utils/theme';
-import {Logo} from '../components/icons';
+
+import bgImage from '../img/splash-bg.jpg';
+import logo from '../img/Logo.png';
 
 const SplashView: () => Node = props => {
   const {colors} = theme;
   const {navigation} = props;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const transAnim = useRef(new Animated.Value(10)).current;
+
   useEffect(() => {
     setTimeout(() => navigation.navigate('Home'), 1200);
   }, []);
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(transAnim, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim, transAnim]);
 
   return (
     <Box
@@ -21,13 +44,31 @@ const SplashView: () => Node = props => {
       justifyContent="center"
       alignItems="center"
       bg={colors.black}>
-      <Box
-        size={200}
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center">
-        <Logo color={colors.red} width={200} height={150} />
-      </Box>
+      <ImageBackground
+        source={bgImage}
+        style={{
+          flex: 1,
+          height: '100%',
+          flexDirection: 'column',
+          resizeMode: 'cover',
+          justifyContent: 'center',
+          alignItems: 'center',
+          border: '1px solid red',
+        }}>
+        <Animated.View
+          style={{
+            opacity: fadeAnim,
+            transform: [{translateY: transAnim}],
+          }}>
+          <Image
+            style={{
+              width: 120,
+              height: 120,
+            }}
+            source={logo}
+          />
+        </Animated.View>
+      </ImageBackground>
     </Box>
   );
 };

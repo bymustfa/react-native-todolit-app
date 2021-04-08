@@ -9,10 +9,20 @@ import {
   flexbox,
   borderRadius,
   position,
+  background,
 } from 'styled-system';
 
 const Box = styled(View)(
-  compose(flexbox, space, border, color, size, borderRadius, position),
+  compose(
+    flexbox,
+    space,
+    border,
+    color,
+    size,
+    borderRadius,
+    position,
+    background,
+  ),
 );
 
 export default Box;
